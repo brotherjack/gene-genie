@@ -13,7 +13,7 @@ module Genetic
   end
 
   module Selection
-    class SelectionMethod
+    class Method
       def normalize(population, to=2)
         if population.is_a? Genetic::Population
           raise 'Population does not have fitness scores' unless population.has_fitness_scores?

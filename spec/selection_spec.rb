@@ -2,7 +2,7 @@ require '../lib/genetic'
 require '../lib/selection/selection'
 require 'securerandom'
 
-RSpec.describe Genetic::Selection::SelectionMethod do
+RSpec.describe Genetic::Selection::Method do
   describe '#normalize' do
     let(:array_of_floats) { [2597.9, 8.2, 1.2, 714.37, 47.9, 1.1] }
     let(:normalized_array_of_floats) {  [0.01, 0.1, 0.42, 0.45, 0.0, 0.02] }  
