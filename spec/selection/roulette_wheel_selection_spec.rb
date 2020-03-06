@@ -2,7 +2,7 @@ require_relative '../../lib/selection/roulette_wheel'
 
 RSpec.describe Genetic::Selection::RouletteWheel do
   describe '#new' do
-    subject { described_class.new fitness_values }
+    subject { described_class.new fitness_values, 4 }
 
     let(:fitness_values) { [12, 55, 20, 10, 70, 60] }
     let(:expected_values) { [1.00, 0.6917, 0.4274, 0.1851, 0.0970, 0.0441] }
