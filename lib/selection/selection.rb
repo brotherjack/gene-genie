@@ -1,3 +1,5 @@
+require_relative '../genetic'
+
 module Genetic
   def self.normalize_array(array=[], to=2)
     total = Float array.sum
