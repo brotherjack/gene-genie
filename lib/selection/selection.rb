@@ -14,6 +14,12 @@ module Genetic
 
   module Selection
     class Method
+      def cumulative_sum(array)
+        sum = [1.0]
+        (1..array.length-1).each { |index| sum << array.slice(index..-1).sum }
+        sum
+      end
+
       def normalize(population, to=2)
         if population.is_a? Genetic::Population
           raise 'Population does not have fitness scores' unless population.has_fitness_scores?
