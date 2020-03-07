@@ -1,11 +1,16 @@
 require_relative '../../lib/selection/roulette_wheel'
+require_relative '../support/helpers'
+
+RSpec.configure do |c|
+  c.include Helpers
+end
 
 RSpec.describe Genetic::Selection::RouletteWheel do
+  let(:fitness_values) { [12, 55, 20, 10, 70, 60] }
+  let(:expected_values) { [1.00, 0.6917, 0.4274, 0.1851, 0.0970, 0.0441] }
+
   describe '#new' do
     subject { described_class.new fitness_values, 4 }
-
-    let(:fitness_values) { [12, 55, 20, 10, 70, 60] }
-    let(:expected_values) { [1.00, 0.6917, 0.4274, 0.1851, 0.0970, 0.0441] }
 
     it 'will have a wheel variable with correct values in the correct order' do
 

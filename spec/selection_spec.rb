@@ -1,6 +1,11 @@
 require '../lib/genetic'
 require '../lib/selection/selection'
 require 'securerandom'
+require './support/helpers'
+
+RSpec.configure do |c|
+  c.include Helpers
+end
 
 RSpec.describe Genetic::Selection::Method do
   describe '#normalize' do
