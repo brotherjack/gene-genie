@@ -1,11 +1,13 @@
+require 'securerandom'
+
 module Helpers
-  def create_population(array)
+  def create_population_with_fitness_scores(array)
     population = Genetic::Population.new
-    fitness_hash = array.each.inject({}) do |acc, f|
+    fitness = array.each.inject({}) do |acc, f|
       acc[SecureRandom.uuid] = f
       acc
     end
-    population.send('fitness_scores=', fitness_hash)
+    population.send('fitness_scores=', fitness)
     population
   end
 end

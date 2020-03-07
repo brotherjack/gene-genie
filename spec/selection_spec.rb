@@ -56,15 +56,7 @@ RSpec.describe Genetic::Selection::Method do
 
         let(:trait) { :body_size }
         
-        let(:population) do
-          population = Genetic::Population.new
-          fitness_hash = array_of_floats.each.inject({}) do |acc, f|
-            acc[SecureRandom.uuid] = f
-            acc
-          end
-          population.send('fitness_scores=', fitness_hash)
-          population
-        end
+        let(:population) { create_population_with_fitness_scores array_of_floats }
 
         it { expect(subject).to eq normalized_array }
       end
