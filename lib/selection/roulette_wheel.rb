@@ -13,7 +13,7 @@ module Genetic
 
       def initialize(population, to=2)
         normalized_and_sorted = normalize(population, to).sort.reverse
-        @wheel = Genetic::Selection.cumulative_sum normalized_and_sorted
+        @wheel = Selection.cumulative_sum normalized_and_sorted
       end
     end
   end
