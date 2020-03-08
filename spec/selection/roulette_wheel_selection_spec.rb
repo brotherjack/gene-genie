@@ -60,4 +60,32 @@ RSpec.describe Genetic::Selection::RouletteWheel do
       end
     end
   end
+
+  describe '#select' do    
+    SCORES = {
+      1.00 => 4,
+      0.8 => 4,
+      0.6917 => 5,
+      0.6 => 5,
+      0.4274 => 1,
+      0.2 => 1,
+      0.1851 => 2,
+      0.1 => 2,
+      0.0970 => 0,
+      0.05 => 0,
+      0.0441 => 3,
+      0 => 3
+    }
+    SCORES.each do |score, selection|
+      context "when score is #{score} then #{selection} should be returned" do
+        subject do
+          roulette_wheel = described_class.new fitness_values, 4
+          allow(roulette_wheel).to receive(:generate_random).and_return(score)
+          roulette_wheel.select
+        end
+
+        it { expect(subject).to eq selection }
+      end
+    end
+  end
 end
