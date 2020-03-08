@@ -15,6 +15,16 @@ module Genetic
           @wheel = cumulative_sum Hash[normalized.sort_by { |_k, v| -v }]
         end
       end
+
+      def select
+        selection = generate_random
+        @wheel.to_a.reverse.find { |item, bin| break item if selection <= bin }
+      end
+
+      private
+      def generate_random
+        rand 0.0..1.0
+      end
     end
   end
 end
