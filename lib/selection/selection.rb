@@ -1,23 +1,32 @@
 require_relative '../genetic'
 
 module Genetic
-  def self.normalize_array(array=[], to=2)
-    total = Float array.sum
-    array.each.inject([]) { |acc, el| acc << (el / total).round(to); acc }
-  end
-
-  def self.normalize_hash(hash={}, t=2)
+  def self.normalize_hash(hash={}, to=2)
     total = Float hash.values.sum
-    # TODO: WHY 2 and not t=2 or to=2!?
-    hash.each.inject({}) { |acc, (k,v)| acc.update({k => (v / total).round(2)}) }
+    hash.each.inject({}) do |acc, (k,v)|
+      acc[k] = (v / total).round(to)
+      acc
+    end
   end
 
   module Selection
     class Method
-      def cumulative_sum(array)
-        sum = [1.0]
-        (1..array.length-1).each { |index| sum << array.slice(index..-1).sum }
-        sum
+      def cumulative_sum(summable)
+        if summable.respond_to? :keys
+          keys = summable.keys.slice(1..-1)
+          sums = {}
+          summable.slice(*keys).each.with_index do |(key, value), index|
+            sums[key] = summable.values.slice(index+1..-1).sum
+            sums
+          end
+          return Hash[[[summable.keys.first, 1.0]] + sums.to_a]
+        else
+          sums = [1.0]
+          (1..summable.length-1).each do |index|
+            sums << summable.slice(index..-1).sum
+          end
+          return sums
+        end
       end
 
       def normalize(population, to=2)
@@ -25,7 +34,11 @@ module Genetic
           raise 'Population does not have fitness scores' unless population.has_fitness_scores?
           population.normalize_fitness_scores(to)
         else
-          return Genetic.normalize_array(population, to)
+          indexed = population.each.with_index.inject({}) do |acc, (v, i)|
+            acc[i] = v
+            acc
+          end
+          return Genetic.normalize_hash(indexed, to)
         end
       end
     end

@@ -7,21 +7,30 @@ end
 
 RSpec.describe Genetic::Selection::RouletteWheel do
   let(:fitness_values) { [12, 55, 20, 10, 70, 60] }
-  let(:expected_values) { [1.00, 0.6917, 0.4274, 0.1851, 0.0970, 0.0441] }
+  let(:expected_values) do
+    {
+      4 => 1.00,
+      5 => 0.6917,
+      1 => 0.4274,
+      2 => 0.1851,
+      0 => 0.0970,
+      3 => 0.0441
+    }
+  end 
 
   describe '#new' do
     context 'when passed an array' do
       subject { described_class.new fitness_values, 4 }
 
-      it 'will have a wheel variable with correct values in the correct order' do
+      specify 'wheel will have correct values in the correct order and keys' do
 
         expect(subject.wheel).to satisfy do |wheel|
-          wheel.each.with_index do |value, index|
-            error_message = "at index #{index} expected #{value} to be "
-            error_message += "within 0.01 of #{expected_values[index]} "
+          wheel.each do |key, value| 
+            error_message = "at index #{key} expected #{value} to be "
+            error_message += "within 0.01 of #{expected_values[key]} "
             error_message += "roulette wheel is #{subject.wheel}"
             expect(value).to(
-              be_within(0.01).of(expected_values[index]), error_message
+              be_within(0.01).of(expected_values[key]), error_message
             )
           end
         end
@@ -34,16 +43,18 @@ RSpec.describe Genetic::Selection::RouletteWheel do
         described_class.new population, 4
       end
 
+      let(:uuid_regex) { /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/ }
+
       it 'will have a wheel variable with correct values in the correct order' do
 
         expect(subject.wheel).to satisfy do |wheel|
-          wheel.each.with_index do |value, index|
-            error_message = "at index #{index} expected #{value} to be "
-            error_message += "within 0.01 of #{expected_values[index]} "
-            error_message += "roulette wheel is #{subject.wheel}"
+          wheel.each.with_index do |(key, value), index|
             expect(value).to(
-              be_within(0.01).of(expected_values[index]), error_message
+              be_within(0.01).of(expected_values.values[index]),
+              "expected #{value} at #{key} to be within 0.01 of #{expected_values[index]},
+ wheel is #{wheel}"
             )
+            expect(key).to match(uuid_regex)
           end
         end
       end
