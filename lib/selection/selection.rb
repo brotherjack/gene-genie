@@ -1,6 +1,6 @@
 require_relative '../genetic'
 
-module Genetic
+module GeneGenie
   def self.normalize_hash(hash={}, to=2)
     total = Float hash.values.sum
     hash.each.inject({}) do |acc, (k,v)|
@@ -30,7 +30,7 @@ module Genetic
       end
 
       def normalize(population, to=2)
-        if population.is_a? Genetic::Population
+        if population.is_a? GeneGenie::Population
           raise 'Population does not have fitness scores' unless population.has_fitness_scores?
           population.normalize_fitness_scores(to)
         else
@@ -38,7 +38,7 @@ module Genetic
             acc[i] = v
             acc
           end
-          return Genetic.normalize_hash(indexed, to)
+          return GeneGenie.normalize_hash(indexed, to)
         end
       end
     end

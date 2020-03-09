@@ -7,7 +7,7 @@ RSpec.configure do |c|
   c.include Helpers
 end
 
-RSpec.describe Genetic::Selection::Method do
+RSpec.describe GeneGenie::Selection::Method do
   describe '#normalize' do
     let(:array_of_floats) { [2597.9, 8.2, 1.2, 714.37, 47.9, 1.1] }
     let(:normalized_array_of_floats) {  [0.01, 0.1, 0.42, 0.45, 0.0, 0.02] }  
@@ -77,10 +77,10 @@ RSpec.describe Genetic::Selection::Method do
         let(:trait) { :body_size }
         let(:population) do
           chromosomes = array_of_floats.each.inject([]) do |acc, f|
-            acc << Genetic::Chromosome.new([Genetic::Gene.new(trait, f)])
+            acc << GeneGenie::Chromosome.new([GeneGenie::Gene.new(trait, f)])
             acc
           end
-          Genetic::Population.new chromosomes
+          GeneGenie::Population.new chromosomes
         end
         let(:error_message) { 'Population does not have fitness scores' }
 

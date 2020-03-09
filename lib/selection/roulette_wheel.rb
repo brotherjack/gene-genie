@@ -1,8 +1,8 @@
 require_relative 'selection'
 
-module Genetic
+module GeneGenie
   module Selection
-    class RouletteWheel < Genetic::Selection::Method
+    class RouletteWheel < GeneGenie::Selection::Method
       attr_reader :wheel, :population
 
       def initialize(population, to=2)

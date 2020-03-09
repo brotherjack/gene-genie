@@ -5,7 +5,7 @@ RSpec.configure do |c|
   c.include Helpers
 end
 
-RSpec.describe Genetic::Selection::RouletteWheel do
+RSpec.describe GeneGenie::Selection::RouletteWheel do
   let(:fitness_values) { [12, 55, 20, 10, 70, 60] }
   let(:expected_values) do
     {
@@ -61,7 +61,7 @@ RSpec.describe Genetic::Selection::RouletteWheel do
     end
   end
 
-  describe '#select' do    
+  describe '#select' do
     SCORES = {
       1.00 => 4,
       0.8 => 4,

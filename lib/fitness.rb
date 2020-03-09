@@ -1,4 +1,4 @@
-module Genetic
+module GeneGenie
   class Fitness
     def initalize(&fn)
       @function = &fn

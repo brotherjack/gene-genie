@@ -2,7 +2,7 @@ require 'securerandom'
 
 module Helpers
   def create_population_with_fitness_scores(array)
-    population = Genetic::Population.new
+    population = GeneGenie::Population.new
     fitness = array.each.inject({}) do |acc, value|
       acc[SecureRandom.uuid] = value
       acc

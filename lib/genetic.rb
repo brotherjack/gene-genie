@@ -1,7 +1,7 @@
 require 'byebug'
 require 'securerandom'
 
-module Genetic
+module GeneGenie
   def self.humanize_large_number(number)
     number = number.to_s if number.respond_to? :to_s
     integer_part, decimal_part = number.split('.')
@@ -49,7 +49,7 @@ module Genetic
     end
 
     def normalize_fitness_scores(to=2)
-      @fitness_scores = Genetic.normalize_hash(fitness_scores, to)
+      @fitness_scores = GeneGenie.normalize_hash(fitness_scores, to)
     end
 
     def run_fitness(&fn)
@@ -149,7 +149,7 @@ module Genetic
     first_generation_fitness.each.with_index do |(id, fitness), index|
       chromosome = population.at(id)
       puts "##{index+1} - #{chromosome.show}"
-      puts "fitness is #{Genetic.humanize_large_number(fitness)}"
+      puts "fitness is #{GeneGenie.humanize_large_number(fitness)}"
     end
   end
 end
