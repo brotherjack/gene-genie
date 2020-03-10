@@ -29,7 +29,7 @@ module GeneGenie
         if chromosomes&.first.is_a? Chromosome
           chromosomes = chromosomes.each.inject({}) { |acc, ch| acc.update(ch.to_h) }
         else
-          raise "Must be a hash" 
+          raise "Must be a hash or a GeneGenie::Chromosome" 
         end
       end
       @population = chromosomes
