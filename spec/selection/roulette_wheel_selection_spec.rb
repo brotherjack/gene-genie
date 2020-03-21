@@ -1,6 +1,3 @@
-require_relative '../../lib/selection/roulette_wheel'
-require_relative '../support/helpers'
-
 RSpec.configure do |c|
   c.include Helpers
 end
@@ -16,7 +13,7 @@ RSpec.describe GeneGenie::Selection::RouletteWheel do
       0 => 0.0970,
       3 => 0.0441
     }
-  end 
+  end
 
   describe '#new' do
     context 'when passed an array' do

@@ -1,7 +1,8 @@
-require 'byebug'
+require_relative "gene_genie/version"
 require 'securerandom'
 
 module GeneGenie
+  class Error < StandardError; end
   def self.humanize_large_number(number)
     number = number.to_s if number.respond_to? :to_s
     integer_part, decimal_part = number.split('.')

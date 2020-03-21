@@ -1,8 +1,3 @@
-require '../lib/genetic'
-require '../lib/selection/selection'
-require 'securerandom'
-require './support/helpers'
-
 RSpec.configure do |c|
   c.include Helpers
 end

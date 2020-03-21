@@ -1,4 +1,4 @@
-require_relative '../genetic'
+require_relative '../gene_genie'
 
 module GeneGenie
   def self.normalize_hash(hash={}, to=2)

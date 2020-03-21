@@ -1,4 +1,9 @@
-require '../lib/genetic'
+RSpec.describe GeneGenie do
+  it "has a version number" do
+    expect(GeneGenie::VERSION).not_to be nil
+  end
+end
+
 
 RSpec.describe GeneGenie::Population do
   describe '#new' do
