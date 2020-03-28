@@ -43,4 +43,16 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
       it { is_expected.to be_truthy }
     end
   end
+
+  describe '#recombine' do
+    context 'when there are more than two parents' do
+      subject { crossover.recombine(parent_1, parent_2, parent_1) }
+      it {expect{subject}.to raise ArgumentError }
+    end
+
+    context 'when there is only one parent' do
+      subject { crossover.recombine parent_1 }
+      it {expect{subject}.to raise ArgumentError }
+    end
+  end
 end
