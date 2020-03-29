@@ -8,6 +8,8 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
   Chromosome = GeneGenie::Chromosome
   Gene = GeneGenie::Gene
 
+  n = 6.freeze
+
   let(:parent_1) do
     Chromosome.new([
       Gene.new(:strength, 18),
@@ -38,7 +40,6 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
     Chromosome.new([Gene.new(:x, 2), Gene.new(:y, 3)])
   end
 
-  let(:n) { parent_1.genes.length }
   let(:max_children) { (n - 1) * 2 }
   let(:crossover) { described_class.new }
 
@@ -60,7 +61,21 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
     context 'when out of points' do
       it do
         allow(crossover).to receive(:points) { [] }
-        it { expect{subject}.to raise_error IndexError }
+        expect{subject}.to raise_error IndexError 
+      end
+    end
+
+    (1...n).each do |point| 
+      context "when selected point=#{point}" do
+        it "will return #{point}" do
+          allow(crossover.points).to receive(:sample) { point }
+          is_expected.to eq point
+        end
+
+        it "will return points without '#{point}'" do
+          allow(crossover.points).to receive(:sample) { point }
+          expect(crossover.points).to eq (crossover.points - point)
+        end
       end
     end
   end
