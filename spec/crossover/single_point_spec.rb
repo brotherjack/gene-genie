@@ -34,6 +34,10 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
     Chromosome.new([Gene.new(:x, 2)])
   end
 
+  let(:two_gene_chromosome) do
+    Chromosome.new([Gene.new(:x, 2), Gene.new(:y, 3)])
+  end
+
   let(:n) { parent_1.genes.length }
   let(:max_children) { (n - 1) * 2 }
   let(:crossover) { described_class.new }
@@ -69,6 +73,11 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
     context 'when children is over the limit' do
       subject { crossover.recombine [parent_1, parent_2], 100_000 }
       it { expect{subject}.to raise_error RangeError }
+    end
+
+    context 'when the two chromosomes are incompatible' do
+      subject { crossover.recombine [parent_1, two_gene_chromosome] }
+      it { expect{subject}.to raise_error TypeError }
     end
 
     context 'when selected point is at...' do
