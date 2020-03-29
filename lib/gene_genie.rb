@@ -104,6 +104,14 @@ module GeneGenie
       @value = value
     end
 
+    def ===(other)
+      return other.send(:trait) == trait
+    end
+
+    def ==(other)
+      return (other.send(:trait) == @trait) && (other.send(:value) == @value)
+    end
+
     def get_value_if_trait_is(kind, instead_of_nil=0)
       if kind.is_a? Enumerable
         found = kind.each { |k| break value if k == trait }

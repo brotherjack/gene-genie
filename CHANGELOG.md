@@ -6,6 +6,9 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- `GeneGenie.Gene#==`
+- `GeneGenie.Gene#===`
 
 ## [0.1.0]
 ### Added
