@@ -65,8 +65,12 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
       end
     end
 
-    (1...n).each do |point| 
+    (1...n).each do |point|
       context "when selected point=#{point}" do
+        before(:each) do
+          crossover.instance_variable_set(:@points, (0..6).to_a)
+        end
+
         it "will return #{point}" do
           allow(crossover.points).to receive(:sample) { point }
           is_expected.to eq point
