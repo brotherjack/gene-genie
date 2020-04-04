@@ -60,7 +60,7 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
 
     context 'when out of points' do
       it do
-        allow(crossover).to receive(:points) { [] }
+        crossover.instance_variable_set(:@points, [])
         expect{subject}.to raise_error IndexError 
       end
     end
@@ -130,7 +130,7 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
               allow(crossover).to receive(:select_point) { point }
               is_expected.to satisfy do 
                 parent_1.genes.slice(1..point).each.with_index do |gene, index|
-                  gene == subject[:child_1].genes[index]
+                  gene == subject[0].genes[index]
                 end
               end
             end
@@ -139,7 +139,7 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
               allow(crossover).to receive(:select_point) { point }
               is_expected.to satisfy do
                 parent_2.genes.slice(point..n).each.with_index do |gene, index|
-                  gene == subject[:child_1].genes[index]
+                  gene == subject[0].genes[index]
                 end
               end
             end
@@ -150,7 +150,7 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
               allow(subject).to receive(:select_point) { point }
               is_expected.to satisfy do 
                 parent_2.genes.slice(1..point).each.with_index do |gene, index|
-                  gene == subject[:child_2].genes[index]
+                  gene == subject[1].genes[index]
                 end
               end
             end
@@ -159,7 +159,7 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
               allow(subject).to receive(:select_point) { point }
               is_expected.to satisfy do
                 parent_1.genes.slice(point..n).each.with_index do |gene, index|
-                  gene == subject[:child_2].genes[index]
+                  gene == subject[1].genes[index]
                 end
               end
             end
