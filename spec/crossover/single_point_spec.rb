@@ -72,7 +72,7 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
           crossover.send :select_point
         end
 
-        let(:points) { (0..6).to_a }
+        let(:points) { (1...n).to_a }
 
         it "will return #{point} and points will no longer contain '#{point}'" do
           is_expected.to eq point
@@ -96,11 +96,6 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
     context 'when a parent has only one gene' do
       subject { crossover.recombine [parent_1, one_gene_chromosome] }
       it { expect { subject }.to raise_error IndexError }
-    end
-
-    context 'when children is over the limit' do
-      subject { crossover.recombine [parent_1, parent_2], 100_000 }
-      it { expect { subject }.to raise_error RangeError }
     end
 
     context 'when the two chromosomes are incompatible' do
