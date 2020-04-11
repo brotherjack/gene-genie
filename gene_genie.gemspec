@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require 'lib/gene_genie/version'
 
+# rubocop:disable Layout/LineLength
 Gem::Specification.new do |spec|
   spec.name          = 'gene_genie'
   spec.version       = GeneGenie::VERSION
@@ -26,3 +29,4 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 end
+# rubocop:enable Layout/LineLength

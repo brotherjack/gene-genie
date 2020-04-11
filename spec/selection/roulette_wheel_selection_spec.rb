@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 RSpec.configure do |c|
   c.include Helpers
 end
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe GeneGenie::Selection::RouletteWheel do
   let(:fitness_values) { [12, 55, 20, 10, 70, 60] }
   let(:expected_values) do
@@ -41,13 +44,13 @@ RSpec.describe GeneGenie::Selection::RouletteWheel do
 
       let(:uuid_regex) { /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/ }
 
-      it 'will have a wheel variable with correct values in the correct order' do
+      it 'will have a wheel variable with correct values in correct order' do
         expect(subject.wheel).to satisfy do |wheel|
           wheel.each.with_index do |(key, value), index|
             expect(value).to(
               be_within(0.01).of(expected_values.values[index]),
-              "expected #{value} at #{key} to be within 0.01 of #{expected_values[index]},
- wheel is #{wheel}"
+              "expected #{value} at #{key} to be within 0.01
+of #{expected_values[index]},  wheel is #{wheel}"
             )
             expect(key).to match(uuid_regex)
           end
@@ -84,3 +87,4 @@ RSpec.describe GeneGenie::Selection::RouletteWheel do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../gene_genie'
 
 module GeneGenie
@@ -8,7 +10,10 @@ module GeneGenie
     end
   end
 
+  # Contains the various methods to generate offspring and select which
+  # chromosomes persist to the next generation
   module Selection
+    # An abstract class containing methods shared by all Selection methods
     class Method
       def cumulative_sum(summable)
         if summable.respond_to? :keys
@@ -36,7 +41,9 @@ module GeneGenie
 
           population.normalize_fitness_scores(to)
         else
-          indexed = population.each.with_index.each_with_object({}) do |(v, i), acc|
+          indexed = population
+                    .each.with_index
+                    .each_with_object({}) do |(v, i), acc|
             acc[i] = v
           end
           GeneGenie.normalize_hash(indexed, to)

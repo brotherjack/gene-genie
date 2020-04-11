@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 require_relative 'selection'
 
 module GeneGenie
   module Selection
+    # A simple selection algorithm that mimics the operation of a roulette wheel
     class RouletteWheel < GeneGenie::Selection::Method
       attr_reader :wheel, :population
 

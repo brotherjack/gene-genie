@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH << 'lib'
 $LOAD_PATH << 'lib/selection'
 $LOAD_PATH << 'lib/crossover'

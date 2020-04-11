@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 RSpec.configure do |c|
   c.include Helpers
 end
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe GeneGenie::Selection::Method do
   describe '#normalize' do
     let(:array_of_floats) { [2597.9, 8.2, 1.2, 714.37, 47.9, 1.1] }
@@ -16,7 +19,8 @@ RSpec.describe GeneGenie::Selection::Method do
 
         it 'will return a hash with the index keyed to the normalized values' do
           expect(subject.values).to eq normalized_array_of_floats
-          expect(subject.keys).to eq (0..normalized_array_of_floats.length - 1).to_a
+          index = (0..normalized_array_of_floats.length - 1).to_a
+          expect(subject.keys).to eq index
         end
 
         context 'when a rounding number is given' do
@@ -25,9 +29,10 @@ RSpec.describe GeneGenie::Selection::Method do
           let(:round_to) { 4 }
           let(:normalized) { [0.0054, 0.1011, 0.424, 0.4497, 0.0001, 0.0197] }
 
-          it 'will return a hash with the index keyed to the normalized values' do
+          it 'will return a hash with index keyed to the normalized values' do
             expect(subject.values).to eq normalized
-            expect(subject.keys).to eq (0..normalized.length - 1).to_a
+            index = (0..normalized.length - 1).to_a
+            expect(subject.keys).to eq index
           end
         end
       end
@@ -35,9 +40,10 @@ RSpec.describe GeneGenie::Selection::Method do
       context 'when floats' do
         subject { described_class.new.normalize array_of_floats }
 
-        it 'will return a hash with the index keyed to the normalized values' do
+        it 'will return a hash with index keyed to the normalized values' do
           expect(subject.values).to eq normalized_array
-          expect(subject.keys).to eq (0..normalized_array.length - 1).to_a
+          index = (0..normalized_array.length - 1).to_a
+          expect(subject.keys).to eq index
         end
 
         context 'when a rounding number is given' do
@@ -45,9 +51,10 @@ RSpec.describe GeneGenie::Selection::Method do
           let(:round_to) { 4 }
           let(:normalized) { [0.7707, 0.0024, 0.0004, 0.2119, 0.0142, 0.0003] }
 
-          it 'will return a hash with the index keyed to the normalized values' do
+          it 'will return a hash with index keyed to the normalized values' do
             expect(subject.values).to eq normalized
-            expect(subject.keys).to eq (0..normalized.length - 1).to_a
+            index = (0..normalized.length - 1).to_a
+            expect(subject.keys).to eq index
           end
         end
       end
@@ -61,7 +68,9 @@ RSpec.describe GeneGenie::Selection::Method do
           population.fitness_scores.values
         end
 
-        let(:population) { create_population_with_fitness_scores array_of_floats }
+        let(:population) do
+          create_population_with_fitness_scores array_of_floats
+        end
 
         it { expect(subject).to eq normalized_array }
       end
@@ -83,3 +92,4 @@ RSpec.describe GeneGenie::Selection::Method do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

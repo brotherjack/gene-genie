@@ -3,11 +3,10 @@
 require_relative 'gene_genie/version'
 require 'securerandom'
 
+# A Gem for developing Genetic Algorithms whose name is a pun on 1990's
+# "Game Genie". Could be potentially used to make something to hack ROM's, but
+# this is not the intent of the author.
 module GeneGenie
-  # A Gem for developing Genetic Algorithms whose name is a pun on 1990's
-  # "Game Genie". Could be potentially used to make something to hack ROM's, but
-  # this is not the intent of the author.
-
   class Error < StandardError; end
   def self.humanize_large_number(number)
     number = number.to_s if number.respond_to? :to_s
@@ -55,9 +54,10 @@ module GeneGenie
       @fitness_scores = GeneGenie.normalize_hash(fitness_scores, to)
     end
 
-    def run_fitness(&fn)
-      @fitness_scores = population.each_with_object({}) do |(id, chromosome), hash|
-        hash[id] = chromosome.run_fitness &fn
+    def run_fitness(&fitness_function)
+      @fitness_scores = population
+                        .each_with_object({}) do |(id, chromosome), hash|
+        hash[id] = chromosome.run_fitness(&fitness_function)
       end
     end
 
@@ -74,21 +74,19 @@ module GeneGenie
     def setup_population_hash(chromosomes)
       return chromosomes if chromosomes.is_a? Hash
 
-      if chromosomes&.first.is_a? Chromosome
-        chromosomes = chromosomes.each.inject({}) do |acc, ch|
-          acc.update(ch.to_h) 
-        end
-      else
+      unless chromosomes&.first.is_a?(Chromosome)
         raise 'Must be a hash or a GeneGenie::Chromosome'
       end
 
-      chromosomes
+      chromosomes.each.inject({}) { |acc, ch| acc.update(ch.to_h) }
     end
 
     attr_accessor :population
     attr_writer :fitness_scores
   end
 
+  # Represents a Chromosome - which in this context is an array of Gene objects
+  # A chromosome automatically generates a secure random ID
   class Chromosome
     attr_reader :id, :genes
 
@@ -97,8 +95,8 @@ module GeneGenie
       @id = SecureRandom.uuid
     end
 
-    def run_fitness(&fn)
-      fn.call genes
+    def run_fitness(&function)
+      function.call genes
     end
 
     def show
@@ -115,6 +113,8 @@ module GeneGenie
     attr_writer :genes
   end
 
+  # Building blocks of genetic algorithms. Consists of a label called a `trait`
+  # and a value
   class Gene
     def initialize(name, value = 0)
       @trait = name
@@ -133,10 +133,11 @@ module GeneGenie
       if kind.is_a? Enumerable
         found = kind.each { |k| break value if k == trait }
         return found unless found.nil?
+      elsif kind == trait
+        kind == trait
       else
-        return value if kind == trait
+        instead_of_nil
       end
-      instead_of_nil
     end
 
     def show
@@ -148,17 +149,20 @@ module GeneGenie
     attr_accessor :trait, :value
   end
 
-  if __FILE__ == $0
+  if __FILE__ == $PROGRAM_NAME
     number_of_chromosomes = 10
-    number_of_genes = 2
 
     number_range = 1..100
     length_range = 0.0..10.0
 
     chromosomes = number_of_chromosomes.times.each_with_object({}) do |_, hash|
       chromosome = Chromosome.new([
-                                    Gene.new(:number_of_blades, rand(number_range)),
-                                    Gene.new(:length_of_blades, rand(length_range))
+                                    Gene.new(
+                                      :number_of_blades, rand(number_range)
+                                    ),
+                                    Gene.new(
+                                      :length_of_blades, rand(length_range)
+                                    )
                                   ])
       hash[chromosome.id] = chromosome
     end
@@ -166,12 +170,13 @@ module GeneGenie
     population = Population.new chromosomes
     fitness_fn = lambda do |genes|
       genes.inject(0) do |acc, gene|
-        acc + gene.get_value_if_trait_is(%i[number_of_blades length_of_blades]) * 12.3**Math::PI
+        gene = gene.get_value_if_trait_is(%i[number_of_blades length_of_blades])
+        acc + gene * 12.3**Math::PI
       end
     end
     puts 'First generation fitness: '
 
-    first_generation_fitness = population.run_fitness &fitness_fn
+    first_generation_fitness = population.run_fitness(&fitness_fn)
     first_generation_fitness.each.with_index do |(id, fitness), index|
       chromosome = population.at(id)
       puts "##{index + 1} - #{chromosome.show}"

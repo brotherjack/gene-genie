@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 require 'support/helpers'
 
 RSpec.configure do |c|
   c.include Helpers
 end
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe GeneGenie::Crossover::SinglePoint do
   Chromosome = GeneGenie::Chromosome
   Gene = GeneGenie::Gene
@@ -66,7 +69,9 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
 
   describe '#compatible?' do
     context 'when the lengths of the parent chromosomes do NOT match' do
-      subject { described_class.send(:compatible?, [parent_1, one_gene_chromosome]) }
+      subject do
+        described_class.send(:compatible?, [parent_1, one_gene_chromosome])
+      end
 
       it { is_expected.to be_falsey }
     end
@@ -100,9 +105,9 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
 
         let(:points) { (1...n).to_a }
 
-        it "will return #{point} and points will no longer contain '#{point}'" do
+        it "will return #{point} and points will not contain '#{point}'" do
           is_expected.to eq point
-          expect(crossover.points).to eq (points - [point])
+          expect(crossover.points).to eq(points - [point])
         end
       end
     end
@@ -167,3 +172,4 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
