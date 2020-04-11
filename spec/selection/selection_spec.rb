@@ -5,7 +5,7 @@ end
 RSpec.describe GeneGenie::Selection::Method do
   describe '#normalize' do
     let(:array_of_floats) { [2597.9, 8.2, 1.2, 714.37, 47.9, 1.1] }
-    let(:normalized_array_of_floats) {  [0.01, 0.1, 0.42, 0.45, 0.0, 0.02] }  
+    let(:normalized_array_of_floats) { [0.01, 0.1, 0.42, 0.45, 0.0, 0.02] }
     let(:normalized_array) { [0.77, 0.0, 0.0, 0.21, 0.01, 0.0] }
 
     context 'when passed an array of numbers' do
@@ -16,7 +16,7 @@ RSpec.describe GeneGenie::Selection::Method do
 
         it 'will return a hash with the index keyed to the normalized values' do
           expect(subject.values).to eq normalized_array_of_floats
-          expect(subject.keys).to eq (0..normalized_array_of_floats.length-1).to_a
+          expect(subject.keys).to eq (0..normalized_array_of_floats.length - 1).to_a
         end
 
         context 'when a rounding number is given' do
@@ -27,7 +27,7 @@ RSpec.describe GeneGenie::Selection::Method do
 
           it 'will return a hash with the index keyed to the normalized values' do
             expect(subject.values).to eq normalized
-            expect(subject.keys).to eq (0..normalized.length-1).to_a
+            expect(subject.keys).to eq (0..normalized.length - 1).to_a
           end
         end
       end
@@ -37,7 +37,7 @@ RSpec.describe GeneGenie::Selection::Method do
 
         it 'will return a hash with the index keyed to the normalized values' do
           expect(subject.values).to eq normalized_array
-          expect(subject.keys).to eq (0..normalized_array.length-1).to_a
+          expect(subject.keys).to eq (0..normalized_array.length - 1).to_a
         end
 
         context 'when a rounding number is given' do
@@ -47,7 +47,7 @@ RSpec.describe GeneGenie::Selection::Method do
 
           it 'will return a hash with the index keyed to the normalized values' do
             expect(subject.values).to eq normalized
-            expect(subject.keys).to eq (0..normalized.length-1).to_a
+            expect(subject.keys).to eq (0..normalized.length - 1).to_a
           end
         end
       end
@@ -71,15 +71,14 @@ RSpec.describe GeneGenie::Selection::Method do
 
         let(:trait) { :body_size }
         let(:population) do
-          chromosomes = array_of_floats.each.inject([]) do |acc, f|
+          chromosomes = array_of_floats.each.each_with_object([]) do |f, acc|
             acc << GeneGenie::Chromosome.new([GeneGenie::Gene.new(trait, f)])
-            acc
           end
           GeneGenie::Population.new chromosomes
         end
         let(:error_message) { 'Population does not have fitness scores' }
 
-        it { expect{subject}.to raise_error(error_message) }
+        it { expect { subject }.to raise_error(error_message) }
       end
     end
   end

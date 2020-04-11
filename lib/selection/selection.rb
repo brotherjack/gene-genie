@@ -1,11 +1,10 @@
 require_relative '../gene_genie'
 
 module GeneGenie
-  def self.normalize_hash(hash={}, to=2)
+  def self.normalize_hash(hash = {}, to = 2)
     total = Float hash.values.sum
-    hash.each.inject({}) do |acc, (k,v)|
+    hash.each.each_with_object({}) do |(k, v), acc|
       acc[k] = (v / total).round(to)
-      acc
     end
   end
 
@@ -15,30 +14,32 @@ module GeneGenie
         if summable.respond_to? :keys
           keys = summable.keys.slice(1..-1)
           sums = {}
-          summable.slice(*keys).each.with_index do |(key, value), index|
-            sums[key] = summable.values.slice(index+1..-1).sum
+          summable.slice(*keys).each.with_index do |(key, _value), index|
+            sums[key] = summable.values.slice(index + 1..-1).sum
             sums
           end
-          return Hash[[[summable.keys.first, 1.0]] + sums.to_a]
+          Hash[[[summable.keys.first, 1.0]] + sums.to_a]
         else
           sums = [1.0]
-          (1..summable.length-1).each do |index|
+          (1..summable.length - 1).each do |index|
             sums << summable.slice(index..-1).sum
           end
-          return sums
+          sums
         end
       end
 
-      def normalize(population, to=2)
+      def normalize(population, to = 2)
         if population.is_a? GeneGenie::Population
-          raise 'Population does not have fitness scores' unless population.has_fitness_scores?
+          unless population.fitness_scores?
+            raise 'Population does not have fitness scores'
+          end
+
           population.normalize_fitness_scores(to)
         else
-          indexed = population.each.with_index.inject({}) do |acc, (v, i)|
+          indexed = population.each.with_index.each_with_object({}) do |(v, i), acc|
             acc[i] = v
-            acc
           end
-          return GeneGenie.normalize_hash(indexed, to)
+          GeneGenie.normalize_hash(indexed, to)
         end
       end
     end

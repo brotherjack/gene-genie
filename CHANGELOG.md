@@ -7,8 +7,14 @@ and this project adheres to
 
 ## [Unreleased]
 ### Added
-- `GeneGenie.Gene#==`
-- `GeneGenie.Gene#===`
+- `GeneGenie::Gene#==`
+- `GeneGenie::Gene#===`
+
+### Changed
+- Renamed `GeneGenie::Population#has_fitness_scores?` => 
+  `GeneGenie::Population#fitness_scores?` 
+- Converted `GeneGenie::Crossover::SinglePoint.compatible?` to a public 
+  method.
 
 ## [0.1.0]
 ### Added

@@ -5,7 +5,7 @@ module GeneGenie
     class RouletteWheel < GeneGenie::Selection::Method
       attr_reader :wheel, :population
 
-      def initialize(population, to=2)
+      def initialize(population, to = 2)
         @population = population
         if @population.respond_to? :fitness_scores
           normalized_scores = normalize(population, to)
@@ -22,6 +22,7 @@ module GeneGenie
       end
 
       private
+
       def generate_random
         rand 0.0..1.0
       end
