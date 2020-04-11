@@ -40,24 +40,50 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
     Chromosome.new([Gene.new(:x, 2), Gene.new(:y, 3)])
   end
 
-  let(:max_children) { (n - 1) * 2 }
-  let(:crossover) { described_class.new }
+  describe '#new' do
+    subject(:crossover) { described_class.new parents }
+
+    context 'when there are more than two parents' do
+      let(:parents) { [parent_1, parent_2, parent_1] }
+      it { expect { subject }.to raise_error ArgumentError }
+    end
+
+    context 'when there is only one parent' do
+      let(:parents) { [parent_1] }
+      it { expect { subject }.to raise_error ArgumentError }
+    end
+
+    context 'when a parent has only one gene' do
+      let(:parents) { [parent_1, one_gene_chromosome] }
+      it { expect { subject }.to raise_error IndexError }
+    end
+
+    context 'when the two chromosomes are incompatible' do
+      let(:parents) { [parent_1, two_gene_chromosome] }
+      it { expect { subject }.to raise_error TypeError }
+    end
+  end
 
   describe '#compatible?' do
     context 'when the lengths of the parent chromosomes do NOT match' do
-      subject { crossover.send :compatible?, [parent_1, one_gene_chromosome] }
+      subject { described_class.send(:compatible?, [parent_1, one_gene_chromosome]) }
+
       it { is_expected.to be_falsey }
     end
 
     context 'when the lengths of the parent chromosomes do match' do
-      subject { crossover.send :compatible?, [parent_1, parent_2] }
+      subject { described_class.send :compatible?, [parent_1, parent_2] }
+
       it { is_expected.to be_truthy }
     end
   end
 
   describe '#select_point' do
+    let(:crossover) { described_class.new([parent_1, parent_2]) }
+
     context 'when out of points' do
       subject { crossover.send :select_point }
+
       it do
         crossover.instance_variable_set(:@points, [])
         expect { subject }.to raise_error IndexError
@@ -83,80 +109,56 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
   end
 
   describe '#recombine' do
-    context 'when there are more than two parents' do
-      subject { crossover.recombine([parent_1, parent_2, parent_1]) }
-      it { expect { subject }.to raise_error ArgumentError }
-    end
+  end
 
-    context 'when there is only one parent' do
-      subject { crossover.recombine [parent_1] }
-      it { expect { subject }.to raise_error ArgumentError }
-    end
+  describe '#make_children' do
+    let(:crossover) { described_class.new([parent_1, parent_2]) }
 
-    context 'when a parent has only one gene' do
-      subject { crossover.recombine [parent_1, one_gene_chromosome] }
+    context 'when selected point is at the beginning of the array' do
+      subject { crossover.send(:make_children, 0) }
       it { expect { subject }.to raise_error IndexError }
     end
 
-    context 'when the two chromosomes are incompatible' do
-      subject { crossover.recombine [parent_1, two_gene_chromosome] }
-      it { expect { subject }.to raise_error TypeError }
+    context 'when selected point is at the end of the array' do
+      subject { crossover.send(:make_children, n) }
+      it { expect { subject }.to raise_error IndexError }
     end
 
-    context 'when selected point is at...' do
-      subject { crossover.recombine [parent_1, parent_2] }
-      context '...the beginning of the array' do
-        it do
-          allow(subject).to receive(:select_point) { 0 }
-          expect { subject }.to raise_error IndexError
-        end
-      end
+    (1..5).each do |point|
+      context "...#{point}" do
+        subject { crossover.send :make_children, point }
 
-      context '...the end of the array' do
-        it do
-          allow(subject).to receive(:select_point) { parent_1.length }
-          expect { subject }.to raise_error IndexError
-        end
-      end
-
-      (1..5).each do |point|
-        context "...#{point}" do
-          describe 'child 1' do
-            it "will have the first parent's genes up to #{point}" do
-              allow(crossover).to receive(:select_point) { point }
-              is_expected.to satisfy do
-                parent_1.genes.slice(1..point).each.with_index do |gene, index|
-                  gene == subject[0].genes[index]
-                end
-              end
-            end
-
-            it "will have the second parent's genes after #{point}" do
-              allow(crossover).to receive(:select_point) { point }
-              is_expected.to satisfy do
-                parent_2.genes.slice(point..n).each.with_index do |gene, index|
-                  gene == subject[0].genes[index]
-                end
+        describe 'child 1' do
+          it "will have the first parent's genes up to #{point}" do
+            is_expected.to satisfy do
+              parent_1.genes.slice(1..point).each.with_index do |gene, index|
+                gene == subject[0].genes[index]
               end
             end
           end
 
-          describe 'child 2' do
-            it "will have the second parent's genes up to #{point}" do
-              allow(subject).to receive(:select_point) { point }
-              is_expected.to satisfy do
-                parent_2.genes.slice(1..point).each.with_index do |gene, index|
-                  gene == subject[1].genes[index]
-                end
+          it "will have the second parent's genes after #{point}" do
+            is_expected.to satisfy do
+              parent_2.genes.slice(point..n).each.with_index do |gene, index|
+                gene == subject[0].genes[index]
               end
             end
+          end
+        end
 
-            it "will have the first parent's genes after #{point}" do
-              allow(subject).to receive(:select_point) { point }
-              is_expected.to satisfy do
-                parent_1.genes.slice(point..n).each.with_index do |gene, index|
-                  gene == subject[1].genes[index]
-                end
+        describe 'child 2' do
+          it "will have the second parent's genes up to #{point}" do
+            is_expected.to satisfy do
+              parent_2.genes.slice(1..point).each.with_index do |gene, index|
+                gene == subject[1].genes[index]
+              end
+            end
+          end
+
+          it "will have the first parent's genes after #{point}" do
+            is_expected.to satisfy do
+              parent_1.genes.slice(point..n).each.with_index do |gene, index|
+                gene == subject[1].genes[index]
               end
             end
           end
