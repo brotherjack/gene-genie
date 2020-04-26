@@ -114,6 +114,41 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
   end
 
   describe '#recombine' do
+    subject { described_class.new([parent_1, parent_2]).recombine }
+    let(:point) { n / 2 }
+    let(:children) do
+      described_class
+        .new([parent_1, parent_2])
+        .send(:make_children, point)
+    end
+    let(:probability_of_crossover) { 0.6 }
+
+    context 'when results are less than or equal to probability of crossover' do
+      let(:random_numbers) { [0.0, probability_of_crossover] }
+
+      it 'will return both children' do
+        allow_any_instance_of(described_class)
+          .to receive(:rand)
+          .and_return(*random_numbers)
+        allow_any_instance_of(described_class)
+          .to receive(:select_point)
+          .and_return(point)
+        is_expected.to eq [children.first, children.last]
+      end
+    end
+
+    context 'when results are greater than the probability of crossover' do
+      let(:random_numbers) { [probability_of_crossover + 0.01, 1.0] }
+      it 'will return both parents' do
+        allow_any_instance_of(described_class)
+          .to receive(:rand)
+          .and_return(*random_numbers)
+        allow_any_instance_of(described_class)
+          .to receive(:select_point)
+          .and_return(point)
+        is_expected.to eq [parent_1, parent_2]
+      end
+    end
   end
 
   describe '#make_children' do
