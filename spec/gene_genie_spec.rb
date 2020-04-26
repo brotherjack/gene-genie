@@ -17,6 +17,31 @@ RSpec.describe GeneGenie::Population do
   end
 end
 
+RSpec.describe GeneGenie::Chromosome do
+  describe '#==' do
+    context 'when two chromosomes have the same set of genes, in same order' do
+      subject { chromosome_a == chromosome_b }
+
+      let(:chromosome_a) { described_class.new [dank_gene] }
+      let(:chromosome_b) { described_class.new [dank_gene] }
+      let(:dank_gene) { GeneGenie::Gene.new(:derp, 420) }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when two chromosomes have same genes in a different order' do
+      subject { chromosome_a == chromosome_b }
+
+      let(:chromosome_a) { described_class.new [dank_gene, nice_gene] }
+      let(:chromosome_b) { described_class.new [nice_gene, dank_gene] }
+      let(:dank_gene) { GeneGenie::Gene.new(:derp, 420) }
+      let(:nice_gene) { GeneGenie::Gene.new(:nice, 69) }
+
+      it { is_expected.to be_falsey }
+    end
+  end
+end
+
 RSpec.describe GeneGenie::Gene do
   let(:gene_nervous_10) { described_class.new :nervous, 10 }
   let(:gene_nervous_100) { described_class.new :nervous, 100 }
