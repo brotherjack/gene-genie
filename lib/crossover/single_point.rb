@@ -28,7 +28,18 @@ module GeneGenie
       end
 
       def recombine
-        make_children(select_point)
+        survivors = []
+        children = make_children(select_point)
+
+        2.times do |index|
+          survivors << if rand <= @probability_of_crossover
+                         children[index]
+                       else
+                         @parents[index]
+                       end
+        end
+
+        survivors
       end
 
       def self.compatible?(parents)
