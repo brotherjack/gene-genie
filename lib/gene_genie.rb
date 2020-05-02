@@ -108,6 +108,10 @@ module GeneGenie
       { id => genes }
     end
 
+    def ==(other_chromosome)
+      @genes == other_chromosome.genes
+    end
+
     private
 
     attr_writer :genes
