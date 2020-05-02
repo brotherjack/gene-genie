@@ -77,8 +77,8 @@ module GeneGenie
       end
 
       def splice_chromosome(first_parent, second_parent, point)
-        first_part = first_parent.slice(0..point)
-        second_part = second_parent.slice(point..@parents_length)
+        first_part = first_parent.slice(0...point)
+        second_part = second_parent.slice(point...@parents_length)
 
         GeneGenie::Chromosome.new first_part + second_part
       end
