@@ -114,17 +114,23 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
   end
 
   describe '#recombine' do
-    subject { described_class.new([parent_1, parent_2]).recombine }
+    subject do
+      described_class
+        .new([parent_1, parent_2], probability_of_crossover)
+        .recombine
+    end
+
     let(:point) { n / 2 }
+    let(:probability_of_crossover) { 0.6 }
     let(:children) do
       described_class
         .new([parent_1, parent_2])
         .send(:make_children, point)
     end
-    let(:probability_of_crossover) { 0.6 }
 
     context 'when results are less than or equal to probability of crossover' do
       let(:random_numbers) { [0.0, probability_of_crossover] }
+      let(:survivors) { [children.first, children.last] }
 
       it 'will return both children' do
         allow_any_instance_of(described_class)
@@ -133,7 +139,7 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
         allow_any_instance_of(described_class)
           .to receive(:select_point)
           .and_return(point)
-        is_expected.to eq [children.first, children.last]
+        is_expected.to eq survivors
       end
     end
 
@@ -204,6 +210,29 @@ RSpec.describe GeneGenie::Crossover::SinglePoint do
           end
         end
       end
+    end
+  end
+
+  describe '#splice_chromosome' do
+    subject { crossover.send(:splice_chromosome, genes_1, genes_2, point) }
+
+    let(:crossover) { described_class.new [parent_1, parent_2] }
+    let(:point) { 3 }
+    let(:genes_1) { parent_1.genes }
+    let(:genes_2) { parent_2.genes }
+    let(:spliced) do
+      GeneGenie::Chromosome.new [
+        Gene.new(:strength, 18),
+        Gene.new(:dexterity, 16),
+        Gene.new(:constitution, 14),
+        Gene.new(:wisdom, 14),
+        Gene.new(:intellegence, 16),
+        Gene.new(:charisma, 18)
+      ]
+    end
+
+    it 'will have the expected genes without duplicates' do
+      is_expected.to eq(spliced)
     end
   end
 end
